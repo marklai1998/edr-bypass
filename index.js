@@ -26,7 +26,7 @@ const fakeResponse = {
   data: {
     dlp: true,
     mac_address: mac,
-    device_id: "",
+    device_id: "ABC",
     ip: address,
     spend_time: 0,
     is_install_soft: true,
