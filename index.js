@@ -5,13 +5,7 @@ const app = express();
 const https = require("https");
 const cors = require("cors");
 const fs = require("fs");
-const { networkInterfaces } = require("os");
-
-const nets = networkInterfaces();
-const flattenedNets = Object.values(nets).flat();
-const { address, mac } = flattenedNets.find(
-  ({ family, internal }) => family === "IPv4" && !internal
-);
+const { faker } = require("@faker-js/faker");
 
 const server = https.createServer(
   {
@@ -21,25 +15,24 @@ const server = https.createServer(
   app
 );
 
-const fakeResponse = {
-  ret: 0,
-  data: {
-    dlp: true,
-    mac_address: mac,
-    device_id: "ABC",
-    ip: address,
-    spend_time: 0,
-    is_install_soft: true,
-  },
-};
-
 app.use(cors());
 app.post("/", (req, res) => {
   res.setHeader("Content-Type", "application/json");
+  const fakeResponse = {
+    ret: 0,
+    data: {
+      dlp: true,
+      mac_address: faker.internet.mac(),
+      device_id: faker.datatype.uuid(),
+      ip: faker.internet.ip(),
+      spend_time: 0,
+      is_install_soft: true,
+    },
+  };
+  console.log("Response: ", fakeResponse);
   res.send(fakeResponse);
 });
 
 server.listen(PORT, () => {
   console.log(`Listening on port: ${PORT}, with response:`);
-  console.log(fakeResponse);
 });
